@@ -112,8 +112,34 @@ namespace ISM6225_Fall_2023_Assignment_2
         {
             try
             {
-                // Write your code here and you can modify the return value according to the requirements
-                return new List<IList<int>>();
+                
+                IList<IList<int>> result = new List<IList<int>>();
+
+                if (nums.Length == 0)
+                {
+                    AddRange(result, lower, upper);
+                    return result;
+                }
+
+                if (nums[0] > lower)
+                {
+                    AddRange(result, lower, nums[0] - 1);
+                }
+
+                for (int i = 1; i < nums.Length; i++)
+                {
+                    if (nums[i] - nums[i - 1] > 1)
+                    {
+                        AddRange(result, nums[i - 1] + 1, nums[i] - 1);
+                    }
+                }
+
+                if (nums[nums.Length - 1] < upper)
+                {
+                    AddRange(result, nums[nums.Length - 1] + 1, upper);
+                }
+
+                return result;
             }
             catch (Exception)
             {
@@ -121,6 +147,17 @@ namespace ISM6225_Fall_2023_Assignment_2
             }
 
         }
+       private static void AddRange(IList<IList<int>> result, int start, int end)
+  {
+      if (start == end)
+      {
+          result.Add(new List<int> { start, end });
+      }
+      else if (start < end)
+      {
+          result.Add(new List<int> { start, end });
+      }
+  }
 
         /*
          
@@ -156,9 +193,26 @@ namespace ISM6225_Fall_2023_Assignment_2
         {
             try
             {
-                // Write your code here and you can modify the return value according to the requirements
-                return s.Length == 0;
-            }
+                    //Return false if input length is not even number
+                    if (s.Length % 2 != 0) return false;
+                   
+                    var stack = new Stack<char>();
+                    foreach (var c in s)
+                    {
+                        //Checking the brackets
+                        if (c == '(' || c == '{' || c == '[')
+                            stack.Push(c);
+                        else if (stack.Count == 0 ||
+                                 (c == ')' && stack.Peek() != '(') ||
+                                 (c == '}' && stack.Peek() != '{') ||
+                                 (c == ']' && stack.Peek() != '['))
+                            return false;
+                        else
+                            stack.Pop();
+                    }
+                   
+                    return stack.Count == 0;
+                               }
             catch (Exception)
             {
                 throw;
@@ -191,8 +245,25 @@ namespace ISM6225_Fall_2023_Assignment_2
         {
             try
             {
-                // Write your code here and you can modify the return value according to the requirements
-                return 1;
+                
+                //If length less than 2 then return 0
+                if (prices.Length < 2)
+                {
+                    return 0;
+                }
+
+                //Initializing maxProfit to 0
+                int maxProfit = 0;
+                int minPrice = prices[0];
+
+                for (int i = 1; i < prices.Length; i++)
+                {
+                    maxProfit = Math.Max(maxProfit, prices[i] - minPrice);
+                    minPrice = Math.Min(minPrice, prices[i]);
+                }
+
+                return maxProfit;
+               
             }
             catch (Exception)
             {
@@ -229,7 +300,30 @@ namespace ISM6225_Fall_2023_Assignment_2
         {
             try
             {
-                // Write your code here and you can modify the return value according to the requirements
+                // Creating a dictionary 
+                var dict = new Dictionary<char, char>
+                {
+                    { '0', '0' },
+                    { '1', '1' },
+                    { '6', '9' },
+                    { '8', '8' },
+                    { '9', '6' }
+                };
+
+                
+                int left = 0, right = s.Length - 1;
+
+                // Check if the characters at the respective positions are valid or not
+                while (left <= right)
+                {
+                    if (!dict.ContainsKey(s[left]) || dict[s[left]] != s[right])
+                    {
+                        return false;
+                    }
+                    left++;
+                    right--;
+                }
+               
                 return false;
             }
             catch (Exception)
@@ -271,8 +365,18 @@ namespace ISM6225_Fall_2023_Assignment_2
         {
             try
             {
-                // Write your code here and you can modify the return value according to the requirements
-                return 0;
+                int count = 0;
+                for (int i = 0; i < nums.Length; i++)
+                {
+                    for (int j = i + 1; j < nums.Length; j++)
+                    {
+                        if (nums[i] == nums[j])
+                        {
+                            count++;
+                        }
+                    }
+                }
+                return count;
             }
             catch (Exception)
             {
@@ -321,7 +425,18 @@ namespace ISM6225_Fall_2023_Assignment_2
         {
             try
             {
-                // Write your code here and you can modify the return value according to the requirements
+               
+                // Removing duplicates then sort the array in descending order
+                var distinctNums = nums.Distinct().OrderByDescending(n => n).ToList();
+
+                // If the distinct count is less than 3 then return the maximum
+                if (distinctNums.Count < 3)
+                {
+                    return distinctNums[0];
+                }
+
+                // Return the third maximum
+                return distinctNums[2];
                 return 0;
             }
             catch (Exception)
@@ -354,8 +469,22 @@ namespace ISM6225_Fall_2023_Assignment_2
         {
             try
             {
-                // Write your code here and you can modify the return value according to the requirements
-                return new List<string>() { };
+                IList<string> result = new List<string>();
+
+                // Iterate through the string and check for "++"
+                for (int i = 0; i < currentState.Length - 1; i++)
+                {
+                    if (currentState[i] == '+' && currentState[i + 1] == '+')
+                    {
+                        // Flip "++" to "--"
+                        char[] newState = currentState.ToCharArray();
+                        newState[i] = '-';
+                        newState[i + 1] = '-';
+                        result.Add(new string(newState));
+                    }
+                }
+                
+                return result;
             }
             catch (Exception)
             {
@@ -383,8 +512,26 @@ namespace ISM6225_Fall_2023_Assignment_2
 
         public static string RemoveVowels(string s)
         {
-            // Write your code here and you can modify the return value according to the requirements
-            return "";
+            // Convert the input string to a character array
+               char[] charArray = s.ToCharArray();
+               
+               // Initializing a StringBuilder to store the characters that are not vowels
+               StringBuilder result = new StringBuilder();
+               
+               // Iterate through the characters in the string
+               foreach (char c in charArray)
+               {
+                   // Check if the character is not a vowel
+                   if (c != 'a' && c != 'e' && c != 'i' && c != 'o' && c != 'u' &&
+                       c != 'A' && c != 'E' && c != 'I' && c != 'O' && c != 'U')
+                   {
+                       // Append the character that are not vowels to the result
+                       result.Append(c);
+                   }
+               }
+               
+               // Convert the StringBuilder to a string and return it
+               return result.ToString();
         }
 
         /* Inbuilt Functions - Don't Change the below functions */
